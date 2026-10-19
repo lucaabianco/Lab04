@@ -26,14 +26,14 @@ class LingottoFiere:
         try:
             with open(file_path, "r") as infile:
                 for line in infile:
-                    line.rstrip("\n").split(",")
-                    if line[0][0:1] == "ST":
+                    line = line.rstrip("\n").split(",")
+                    if line[0][0:2] == "ST":
                         if not line[4]: #ho uno stand standard
                             stand_standard = StandStandard(line[0], line[1], line[2], line[3])
                             self.__lista_stand.append(stand_standard)
                         else:
                             if line[4].isdigit():  #ho uno stand con prese aggiuntive
-                                prezzo_stand_prese_agg = float(line[3]) * (1 + 0.7 * float(line[4]))
+                                prezzo_stand_prese_agg = float(line[3]) * (1 + 0.07 * float(line[4]))
                                 stand_prese_agg = StandPreseAggiuntive(line[0], line[1], line[2], line[3], prezzo_stand_prese_agg)
                                 self.__lista_stand.append(stand_prese_agg)
                             elif line[4].isalpha(): #ho uno stand premium
