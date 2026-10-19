@@ -31,11 +31,11 @@ class LingottoFiere:
                         if len(line) == 5:
                             if line[4].isdigit():  #ho uno stand con prese aggiuntive
                                 prezzo_stand_prese_agg = float(line[3]) * (1 + 0.07 * float(line[4]))
-                                stand_prese_agg = StandPreseAggiuntive(line[0], line[1], line[2], line[3], prezzo_stand_prese_agg)
+                                stand_prese_agg = StandPreseAggiuntive(line[0], line[1], line[2], prezzo_stand_prese_agg,line[4])
                                 self.__lista_stand.append(stand_prese_agg)
                             elif line[4].isalpha(): #ho uno stand premium
                                 prezzo_stand_premium = float(line[3]) * 1.30
-                                stand_premium = StandPremium(line[0], line[1], line[2], line[3], prezzo_stand_premium)
+                                stand_premium = StandPremium(line[0], line[1], line[2], prezzo_stand_premium, line[4])
                                 self.__lista_stand.append(stand_premium)
                         else:
                             stand_standard = StandStandard(line[0], line[1], line[2], line[3])
@@ -66,19 +66,18 @@ class LingottoFiere:
                 break
 
         if stand_trovato is None:
-            raise ValueError(f"Lo stand {codice_stand} non esiste.")
+            raise Exception(f"Lo stand {codice_stand} non esiste.")
         if espositore_trovato is None:
-            raise ValueError(f"L'espositore {codice_espositore} non esiste.")
+            raise Exception(f"L'espositore {codice_espositore} non esiste.")
         if not stand_trovato.disponibile:
-            raise ValueError(f"Lo stand {codice_stand} e' gia' occupato.")
+            raise Exception(f"Lo stand {codice_stand} non e' disponibile.")
         if codice_espositore in self.__assegnazioni:
-            raise ValueError(f"L'espositore {codice_espositore} ha gia' uno stand.")
+            raise Exception(f"L'espositore {codice_espositore} ha gia' uno stand.")
 
         stand_trovato.assegna_espositore(espositore_trovato)
         self.__assegnazioni[codice_espositore] = stand_trovato
 
-
-def elenca_espositori(self):
+    def elenca_espositori(self):
         """Stampa l'elenco degli espositori mostrando, per ognuno, lo stand a cui è associato, quando applicabile """
         for espositore in self.__lista_espositori:
             stand = self.__assegnazioni.get(espositore.codice_espositore)
